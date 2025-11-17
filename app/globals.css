@@ -171,12 +171,20 @@
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     letter-spacing: var(--tracking-normal);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

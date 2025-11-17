@@ -95,9 +95,9 @@ const DevProfileCard: React.FC<DevProfileProps> = ({
       {/* Actual card content */}
       <Card className="relative bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden">
         <CardHeader className="flex items-center space-x-4 p-4 z-10">
-          <Avatar className="w-20 h-20 border border-zinc-400 shadow-md">
-            {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : <AvatarFallback>{name.charAt(0)}</AvatarFallback>}
-          </Avatar>
+          <div className="w-20 h-20 border border-zinc-400 rounded-full shadow-md">
+            {avatarUrl ? <img src={avatarUrl} alt={name} className="w-full h-full object-cover rounded-full" /> : <AvatarFallback>{name.charAt(0)}</AvatarFallback>}
+          </div>
           <div>
             <CardTitle className="text-xl text-white">{name}</CardTitle>
             {title && <CardDescription className="text-sm text-muted-foreground">{title}</CardDescription>}

@@ -5,47 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { InView } from '@/components/ui/in-view';
 
 const AboutMeSection: React.FC = () => {
-  const expertise = [
-    { 
-      category: 'Frontend', 
-      level: 85,
-      skills: [
-        { name: 'React', level: 90, icon: '⚛️', color: 'from-cyan-500 to-blue-500' },
-        { name: 'Next.js', level: 85, icon: '▲', color: 'from-gray-700 to-gray-900' },
-        { name: 'TypeScript', level: 88, icon: 'TS', color: 'from-blue-500 to-blue-700' },
-        { name: 'Tailwind CSS', level: 92, icon: '🎨', color: 'from-teal-400 to-cyan-500' }
-      ]
-    },
-    { 
-      category: 'Backend', 
-      level: 80,
-      skills: [
-        { name: 'Node.js', level: 82, icon: '🟢', color: 'from-green-500 to-green-700' },
-        { name: 'Express', level: 80, icon: '⚡', color: 'from-gray-600 to-gray-800' },
-        { name: 'PostgreSQL', level: 78, icon: '🐘', color: 'from-blue-600 to-indigo-600' },
-        { name: 'Prisma', level: 75, icon: '◭', color: 'from-indigo-500 to-purple-600' }
-      ]
-    },
-    { 
-      category: 'Tools & DevOps', 
-      level: 75,
-      skills: [
-        { name: 'Git', level: 85, icon: '🔀', color: 'from-orange-500 to-red-600' },
-        { name: 'Docker', level: 70, icon: '🐳', color: 'from-blue-400 to-blue-600' },
-        { name: 'VS Code', level: 90, icon: '💻', color: 'from-blue-500 to-blue-700' },
-        { name: 'Figma', level: 72, icon: '🎭', color: 'from-purple-500 to-pink-500' }
-      ]
-    }
-  ]
-
-  const achievements = [
-    { title: 'Clean Code Advocate', description: 'Writing maintainable, scalable solutions', icon: '🎯' },
-    { title: 'Problem Solver', description: 'Tackling complex challenges head-on', icon: '⚡' },
-    { title: 'Team Player', description: 'Collaborating for better outcomes', icon: '🤝' },
-    { title: 'Lifelong Learner', description: 'Always exploring new technologies', icon: '📚' }
-  ]
 
   return (
     <section className="relative w-full bg-background py-20 overflow-hidden">
@@ -152,11 +114,8 @@ const AboutMeSection: React.FC = () => {
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative">
                     {/* Avatar glow effect */}
-                    <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full"></div>
-                    <Avatar className="w-64 h-64 border-4 border-primary shadow-2xl shadow-primary/30 relative">
-                      <AvatarImage src="/avatars/profile.png" alt="Profile" />
-                      <AvatarFallback className="text-6xl">TR</AvatarFallback>
-                    </Avatar>
+                    <div className="absolute bg-primary/20 blur-2xl rounded-full"></div>
+                      <img src="/profile1.jpg" alt="Profile" className='object-cover rounded-full w-64 h-64 border-4 border-primary shadow-2xl shadow-primary/30' />
                     {/* Level badge overlay */}
                     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold shadow-lg">
                       Level 42
@@ -170,38 +129,21 @@ const AboutMeSection: React.FC = () => {
 
                 {/* Right: Story */}
                 <div className="space-y-6">
-                  <div>
+                  {/* Right: Enhanced About Me */}
+                  <div className="space-y-6 h-72 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/40 scrollbar-track-secondary/20">
                     <h3 className="text-2xl font-bold text-foreground mb-4">My Journey</h3>
                     <div className="space-y-4">
                       <p className="text-muted-foreground leading-relaxed">
-                        Started coding at age 15, driven by curiosity and a passion for creating. 
-                        Over the years, I've evolved from building simple websites to architecting 
-                        complex full-stack applications.
+                        I&apos;m a student full-stack developer, passionate about creating applications that are both functional and elegant. 
+                        I enjoy exploring different approaches to solving problems and continuously improving my coding skills.
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        I believe in writing code that's not just functional, but elegant and maintainable. 
-                        Every project is an opportunity to learn, grow, and push the boundaries of what's possible.
+                        Beyond writing code, I focus on understanding how systems work, designing maintainable solutions, and developing a mindset for long-term growth. 
+                        I strive to balance learning new technologies with applying them in practical ways.
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        When I'm not coding, you'll find me exploring new technologies, contributing to 
-                        open-source projects, or sharing knowledge with the developer community.
+                        I approach challenges with curiosity, dedication, and persistence, always looking for opportunities to grow and contribute meaningfully to projects.
                       </p>
-                    </div>
-                  </div>
-
-                  {/* Core Values - Compact */}
-                  <div className="grid grid-cols-3 gap-3 pt-4">
-                    <div className="flex flex-col items-center text-center p-3 bg-secondary/50 rounded-lg">
-                      <div className="text-2xl mb-1">💡</div>
-                      <div className="text-xs font-semibold text-foreground">Innovation</div>
-                    </div>
-                    <div className="flex flex-col items-center text-center p-3 bg-secondary/50 rounded-lg">
-                      <div className="text-2xl mb-1">🎨</div>
-                      <div className="text-xs font-semibold text-foreground">Design-First</div>
-                    </div>
-                    <div className="flex flex-col items-center text-center p-3 bg-secondary/50 rounded-lg">
-                      <div className="text-2xl mb-1">⚙️</div>
-                      <div className="text-xs font-semibold text-foreground">Performance</div>
                     </div>
                   </div>
                 </div>
@@ -210,95 +152,81 @@ const AboutMeSection: React.FC = () => {
           </Card>
         </div>
 
-        {/* Gamified Skills Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {expertise.map((category) => (
-            <div key={category.category} className="relative">
-              {/* Gaming border SVG */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                viewBox="0 0 300 400"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id={`grad-${category.category}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" className="[stop-color:oklch(0.6912_0.1569_240.2888)]" stopOpacity="0.6" />
-                    <stop offset="100%" className="[stop-color:oklch(0.6912_0.1569_240.2888)]" stopOpacity="0.3" />
-                  </linearGradient>
-                </defs>
-                <g opacity="0.8">
-                  <path d="M0 0 L40 0 L30 10 L10 10 L10 30 L0 40 Z" fill={`url(#grad-${category.category})`} />
-                  <path d="M0 0 L40 0 M0 0 L0 40" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                  
-                  <path d="M300 0 L260 0 L270 10 L290 10 L290 30 L300 40 Z" fill={`url(#grad-${category.category})`} />
-                  <path d="M300 0 L260 0 M300 0 L300 40" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                  
-                  <path d="M0 400 L40 400 L30 390 L10 390 L10 370 L0 360 Z" fill={`url(#grad-${category.category})`} />
-                  <path d="M0 400 L40 400 M0 400 L0 360" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                  
-                  <path d="M300 400 L260 400 L270 390 L290 390 L290 370 L300 360 Z" fill={`url(#grad-${category.category})`} />
-                  <path d="M300 400 L260 400 M300 400 L300 360" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                </g>
-              </svg>
-              
-              <Card className="relative border-border bg-card hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <CardTitle className="text-lg">{category.category}</CardTitle>
-                    <Badge variant="secondary" className="text-xs">Lv {category.level}</Badge>
-                  </div>
-                  {/* Category level bar */}
-                  <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-primary to-primary/60 transition-all duration-500"
-                      style={{ width: `${category.level}%` }}
-                    ></div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {category.skills.map((skill) => (
-                    <div key={skill.name} className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{skill.icon}</span>
-                          <span className="text-sm font-medium text-foreground">{skill.name}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground font-mono">{skill.level}%</span>
-                      </div>
-                      {/* Skill XP bar */}
-                      <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full bg-gradient-to-r ${skill.color} transition-all duration-700 shadow-sm`}
-                          style={{ width: `${skill.level}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+        <div className='py-12 text-center text-sm'>Scroll down</div>
+        {/* First Section */}
+        <div className='flex h-[500px] items-end justify-center px-4 mt-64 md:mt-16'>
+          <InView
+            variants={{
+              hidden: { opacity: 0, y: 100, filter: 'blur(4px)' },
+              visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+            }}
+            viewOptions={{ margin: '0px 0px -200px 0px' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            <div className="p-4 flex flex-col md:flex-row items-center md:items-start gap-4">
+              {/* Left */}
+              <div className="flex-1 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-4">
+                {/* SVG  */}
+                <img
+                  src="/programming2.svg"
+                  alt="computer"
+                  className="w-96 h-96 opacity-90"
+                />
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 text-center md:text-left mt-16">
+                <p className='my-4'>
+                  I&apos;m currently 4th year student at Baliuag Polytechnic College with a degree of Bachelor of Science in Information Technology.
+                </p>
+                <p>I started programming last february 2023. I first study HTML, CSS and JavaScript. I also have some experience with Python and Java.</p>
+                <p className='my-4'>
+                  Througout the years, I have worked on various projects ranging from simple websites to complex web applications.
+                </p>
+              </div>
             </div>
-          ))}
+          </InView>
         </div>
 
-        {/* Achievements */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {achievements.map((achievement) => (
-            <Card key={achievement.title} className="border-border bg-card hover:border-primary transition-colors text-center">
-              <CardContent className="p-6">
-                <div className="text-4xl mb-3">{achievement.icon}</div>
-                <h4 className="font-semibold text-foreground mb-2">{achievement.title}</h4>
-                <p className="text-sm text-muted-foreground">{achievement.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {/* Second Section*/}
+        <div className='flex h-[500px] items-end justify-center px-4 mt-96 md:mt-16'>
+          <InView
+            variants={{
+              hidden: { opacity: 0, y: 100, filter: 'blur(4px)' },
+              visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+            }}
+            viewOptions={{ margin: '0px 0px -200px 0px' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            <div className="p-4 flex flex-col md:flex-row items-center md:items-start gap-4">
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <Button size="lg" className="shadow-lg shadow-primary/20">
-            Let's Work Together
-          </Button>
+              {/* Left */}
+              <div className="flex-1 text-center md:text-left mt-16">
+                <p className='my-4'>
+                  My long-term goal is to become a highly capable developer who can 
+  build scalable, production-ready applications from scratch.
+                </p>
+                <p>
+                  I&apos;m working toward improving my backend architecture skills, and aim to learn more about cloud computing and DevOps practices.
+                </p>
+                <p className='my-4'>
+                  In todays tech world, I will keep improving my skills and stay updated with the latest trends and technologies.
+                </p>
+              </div>
+
+              {/* Right */}
+              <div className="flex-1 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-end gap-4">
+                {/* SVG  */}
+                <img
+                  src="/programming3.svg"
+                  alt="computer"
+                  className="w-96 h-96 opacity-90"
+                />
+              </div>
+            </div>
+          </InView>
         </div>
+        
       </div>
     </section>
   )

@@ -82,8 +82,9 @@ const HeroSection: React.FC = () => {
           </h1>
           
           <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
-            Showcase your development journey with a professional, game-inspired profile. 
-            Level up your portfolio with modern tech stack badges and achievement tracking.
+            I design and implement scalable backend systems, create clean and secure APIs, and deploy production-ready applications.  
+I also handle frontend development, ensuring end-to-end solutions that meet modern standards.
+
           </p>
           
           <div className="flex flex-wrap gap-4 pt-4">
@@ -98,7 +99,7 @@ const HeroSection: React.FC = () => {
           {/* Stats */}
           <div className="flex gap-8 pt-8 border-t border-border">
             <div>
-              <div className="text-3xl font-bold text-primary">50+</div>
+              <div className="text-3xl font-bold text-primary">10+</div>
               <div className="text-sm text-muted-foreground">Projects</div>
             </div>
             <div>
@@ -115,9 +116,9 @@ const HeroSection: React.FC = () => {
         {/* Right: Profile Card */}
         <div className="flex-1 max-w-md lg:ml-auto lg:max-w-lg w-full">
           <DevProfileCard
-            name="Tristan 2603"
+            name="Mark Tristan C. Garcia"
             level={12}
-            avatarUrl="/avatars/tristan.png"
+            avatarUrl="/profile1.jpg"
             title="Full Stack Developer"
             skills={['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL']}
             description="Building scalable web applications with clean architecture and modern best practices. Passionate about creating exceptional user experiences."
