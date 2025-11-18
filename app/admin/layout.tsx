@@ -4,47 +4,53 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const { user, setUser } = useAuth();
 
     useEffect(() => {
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession()
 
-    const verifyUser = async () => {
-      try {
-        const res = await api.get("/api/verify-admin", { //RETURN THE IMAGE PATH IF EXIST AH
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        setUser(res.data.user_info);
-        console.log("User set:", res.data.user_info); // por debugging again
-      } catch (error) {
-        console.error("Verification failed:", error);
-        localStorage.removeItem("token");
-        setUser(null);
-        router.push("/auth/login");
+      if (error) {
+        console.error('Error checking session:', error)
+      } else if (session) {
+        console.log('You are still logged in:', session)
+      } else {
+        console.log('Not logged in')
       }
-    };
 
-    verifyUser();
-  }, [router, setUser]);
+      // 1. Get logged-in user ID
+      const {
+        data: { user },
+        error: userError
+      } = await supabase.auth.getUser()
 
-  // Por debugging
-  useEffect(() => {
-    console.log("User state updated:", user);
-  }, [user]);
+      console.log("Logged in user:", user)
 
-  if (!user) {
-    // This will trigger if verification fails
-    return null;
-  }
+      if (userError || !user) {
+        console.error("No user logged in")
+        return
+      }
+
+      console.log("Fetching user data for ID:", user.id)
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+
+      console.log("Profile query result:", data)
+
+
+      }
+
+    checkSession()
+  }, [])
+
+
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex h-16 shrink-0 items-center justify-center bg-primary text-primary-foreground">

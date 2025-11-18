@@ -15,12 +15,31 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabaseClient";
+import { log } from "console";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const login = async () => {
+      console.log("Attempting login with:", email, password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    })
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+      console.log("Login successful:", data);
+
+    router.push('/admin/dashboard');
+  }
 
 
   return (
@@ -31,7 +50,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           <CardDescription>Use your user or admin credentials</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={() => console.log(email, password)} className="grid gap-6">
+          <div className="grid gap-6">
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -53,11 +72,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" onClick={login}>
               Login
             </Button>
             {error && <div className="text-red-500 text-center text-sm mt-2">{error}</div>}
-          </form>
+          </div>
         </CardContent>
       </Card>
     </div>
