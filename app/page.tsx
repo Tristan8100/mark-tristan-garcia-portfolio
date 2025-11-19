@@ -12,6 +12,7 @@ import AboutMeSection from "@/components/about-me";
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react";
 import SkillSection from "@/components/skills-compoment";
+import PortfolioShowcase from "@/components/portfolio";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
@@ -24,6 +25,7 @@ export default function Home() {
       <HeroSection />
       <AboutMeSection />
       <SkillSection />
+      <PortfolioShowcase />
       
 
 

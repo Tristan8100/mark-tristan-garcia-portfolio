@@ -105,9 +105,9 @@ export default function SkillSection() {
 
   const playHoverSound = () => {
     const audio = new Audio(
-      "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLYiTcIGWi77eefTRAMUKfj8LZjHAY4ktfyzngsBS1+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBSh+zPLaizsKG2S57OihUxELTKXh8bllHgU2jdT00H4vBQ=="
+      "https://www.myinstants.com/media/sounds/system-notifikason-solo-leveling.mp3"
     )
-    audio.volume = 0.2
+    audio.volume = 0.1
     audio.play().catch(() => {})
   }
 

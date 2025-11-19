@@ -41,10 +41,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         .from("profiles")
         .select("*")
         .eq("id", user.id)
+        .single()
 
       console.log("Profile query result:", data)
 
-
+      if (data?.role !== 'admin') {
+        console.log("User is not an admin, redirecting to /dashboard")
+        router.push('/auth/login')
+      }
+      
       }
 
     checkSession()
@@ -52,11 +57,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
   return (
-    <div className="flex h-full min-h-screen flex-col">
-      <header className="flex h-16 shrink-0 items-center justify-center bg-primary text-primary-foreground">
-        <h1 className="text-2xl font-bold">User Dashboard</h1>
-      </header>
-      <main className="flex-1 overflow-y-auto">{children}</main>
+    <div>
+      {children}
     </div>
   );
 }
