@@ -7,7 +7,7 @@ import React from 'react'
 
 interface DevProfileProps {
   name: string
-  level: number
+  level: string
   avatarUrl?: string
   skills?: string[]
   title?: string
@@ -101,7 +101,7 @@ const DevProfileCard: React.FC<DevProfileProps> = ({
           <div>
             <CardTitle className="text-xl text-white">{name}</CardTitle>
             {title && <CardDescription className="text-sm text-muted-foreground">{title}</CardDescription>}
-            <span className="text-sm font-medium text-white/80">Level {level}</span>
+            {/* <span className="text-sm font-medium text-white/80">Rank: {level}</span> */}
           </div>
         </CardHeader>
 

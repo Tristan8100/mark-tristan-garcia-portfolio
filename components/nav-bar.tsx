@@ -7,10 +7,10 @@ import { useScroll, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 const menuItems = [
-  { name: 'About Me', href: '#link' },
-  { name: 'Skills', href: '#link' },
-  { name: 'Projects', href: '#link' },
-  { name: 'Contacts', href: '#link' },
+  { name: 'About Me', href: '#about-me' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Contacts', href: '#contacts' },
 ]
 
 export const HeroHeader = () => {

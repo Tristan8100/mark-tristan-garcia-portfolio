@@ -1,268 +1,317 @@
 "use client"
 
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
-import Skill from "./skill"
-import { SkillProps } from "./skill"
-import { useState, useEffect } from "react"
-import { Badge } from "./ui/badge"
+import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import Module from "module"
+import ModuleHeader from "./module-header"
+
+// --- Types ---
+interface SkillProps {
+  name: string
+  logo: string
+  level: number
+  color: string
+  category: string
+  yearsOfExperience: number
+  projectsCount: number
+  proficiency: string
+  my_remarks: string
+}
+
+// --- Data ---
+const skills: SkillProps[] = [
+  {
+    name: "React.js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    level: 90,
+    color: "cyan",
+    category: "Frontend",
+    yearsOfExperience: 2.5,
+    projectsCount: 15,
+    proficiency: "Advanced",
+    my_remarks: "Core system component. High synchronization rate with UI logic.",
+  },
+  {
+    name: "TypeScript",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    level: 85,
+    color: "blue",
+    category: "Language",
+    yearsOfExperience: 2,
+    projectsCount: 12,
+    proficiency: "Advanced",
+    my_remarks: "Enhances system stability. Prevents runtime anomalies.",
+  },
+  {
+    name: "Node.js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+    level: 80,
+    color: "green",
+    category: "Backend",
+    yearsOfExperience: 2,
+    projectsCount: 10,
+    proficiency: "Advanced",
+    my_remarks: "Server-side processing unit. Scalable architecture supported.",
+  },
+  {
+    name: "Next.js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+    level: 88,
+    color: "white",
+    category: "Framework",
+    yearsOfExperience: 1.5,
+    projectsCount: 8,
+    proficiency: "Advanced",
+    my_remarks: "Optimized for production. SSR and routing capabilities active.",
+  },
+  {
+    name: "PostgreSQL",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+    level: 75,
+    color: "indigo",
+    category: "Database",
+    yearsOfExperience: 1.5,
+    projectsCount: 7,
+    proficiency: "Intermediate",
+    my_remarks: "Data persistence layer. Query optimization in progress.",
+  },
+  {
+    name: "Tailwind CSS",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+    level: 92,
+    color: "teal",
+    category: "Styling",
+    yearsOfExperience: 2,
+    projectsCount: 20,
+    proficiency: "Expert",
+    my_remarks: "Rapid UI deployment protocol. Utility-first styling engine.",
+  },
+  {
+    name: "Docker",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+    level: 92,
+    color: "sky",
+    category: "DevOps",
+    yearsOfExperience: 2,
+    projectsCount: 20,
+    proficiency: "Beginner",
+    my_remarks: "Containerization protocol. Environment consistency guaranteed.",
+  },
+]
+
+// --- Components ---
+
+const HexagonFrame = ({ isActive, color }: { isActive: boolean; color: string }) => (
+  <svg
+    className={cn(
+      "absolute inset-0 w-full h-full transition-all duration-300 pointer-events-none",
+      isActive ? "opacity-100 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]" : "opacity-40",
+    )}
+    viewBox="0 0 100 100"
+  >
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+    {/* Outer Hexagon */}
+    <path
+      d="M50 2 L93.3 27 V77 L50 102 L6.7 77 V27 Z"
+      fill="none"
+      stroke={isActive ? "#06b6d4" : "#1e293b"}
+      strokeWidth={isActive ? "2" : "1"}
+      className="transition-all duration-300"
+    />
+    {/* Inner Decorative Lines */}
+    {isActive && (
+      <>
+        <path d="M50 10 L85 30 V70 L50 90 L15 70 V30 Z" fill="none" stroke="#06b6d4" strokeWidth="0.5" opacity="0.5" />
+        <circle
+          cx="50"
+          cy="50"
+          r="30"
+          fill="none"
+          stroke="#06b6d4"
+          strokeWidth="0.5"
+          strokeDasharray="4 4"
+          className="animate-spin-slow"
+        />
+      </>
+    )}
+  </svg>
+)
+
+const SkillDetailWindow = ({ skill, onClose }: { skill: SkillProps; onClose: () => void }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9, y: 20 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md bg-[#020617]/90 border border-cyan-500/50 p-6 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          clipPath: "polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%)",
+        }}
+      >
+        {/* Decorative Corners */}
+        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-500" />
+        <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-500" />
+        <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-500" />
+
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6 border-b border-cyan-900/50 pb-4">
+          <div className="w-16 h-16 p-2 bg-cyan-950/30 border border-cyan-500/30 rounded-md">
+            <img src={skill.logo || "/placeholder.svg"} alt={skill.name} className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-cyan-400 tracking-wider font-mono uppercase">{skill.name}</h3>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" className="border-cyan-500/50 text-cyan-300 bg-cyan-950/30 font-mono text-xs">
+                {skill.category.toUpperCase()}
+              </Badge>
+              <span className="text-xs text-cyan-600 font-mono">LVL.{skill.level}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-cyan-950/10 p-3 border border-cyan-900/30">
+            <div className="text-[10px] text-cyan-600 font-mono uppercase mb-1">Proficiency</div>
+            <div className="text-cyan-100 font-mono">{skill.proficiency}</div>
+          </div>
+          <div className="bg-cyan-950/10 p-3 border border-cyan-900/30">
+            <div className="text-[10px] text-cyan-600 font-mono uppercase mb-1">Experience</div>
+            <div className="text-cyan-100 font-mono">{skill.yearsOfExperience} Years</div>
+          </div>
+          <div className="bg-cyan-950/10 p-3 border border-cyan-900/30 col-span-2">
+            <div className="text-[10px] text-cyan-600 font-mono uppercase mb-1">Projects Completed</div>
+            <div className="w-full bg-cyan-950/50 h-2 mt-1 relative overflow-hidden">
+              <div
+                className="absolute top-0 left-0 h-full bg-cyan-500"
+                style={{ width: `${(skill.projectsCount / 30) * 100}%` }}
+              />
+            </div>
+            <div className="text-right text-[10px] text-cyan-400 font-mono mt-1">{skill.projectsCount} Missions</div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="bg-cyan-950/20 p-4 border-l-2 border-cyan-500 mb-6">
+          <div className="text-[10px] text-cyan-600 font-mono uppercase mb-2">System Analysis</div>
+          <p className="text-sm text-cyan-100/80 font-mono leading-relaxed">"{skill.my_remarks}"</p>
+        </div>
+
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="w-full py-3 bg-cyan-950/50 hover:bg-cyan-900/50 border border-cyan-500/30 text-cyan-400 font-mono text-sm uppercase tracking-widest transition-colors"
+        >
+          Close Window
+        </button>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function SkillSection() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
-  const [particles, setParticles] = useState<
-    { left: string; top: string; delay: string; duration: string }[]
-  >([])
+  const [selectedSkill, setSelectedSkill] = useState<SkillProps | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Generate particles on client only (fix hydration mismatch)
   useEffect(() => {
-    const arr = Array.from({ length: 20 }).map(() => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 5}s`,
-      duration: `${10 + Math.random() * 10}s`,
-    }))
-    setParticles(arr)
+    audioRef.current = new Audio("https://www.myinstants.com/media/sounds/system-notifikason-solo-leveling.mp3")
+    audioRef.current.volume = 0.2
   }, [])
 
-  const skills: SkillProps[] = [
-    {
-      name: "React.js",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-      level: 90,
-      color: "from-cyan-500 to-blue-500",
-      category: "Frontend",
-      yearsOfExperience: 2.5,
-      projectsCount: 15,
-      proficiency: "Advanced",
-      my_remarks: "Love how it makes building UIs intuitive with component-based architecture. The ecosystem is massive!",
-    },
-    {
-      name: "TypeScript",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-      level: 85,
-      color: "from-blue-500 to-blue-700",
-      category: "Language",
-      yearsOfExperience: 2,
-      projectsCount: 12,
-      proficiency: "Advanced",
-      my_remarks: "Type safety saves so much debugging time. Makes refactoring confident and safe.",
-    },
-    {
-      name: "Node.js",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-      level: 80,
-      color: "from-green-500 to-green-700",
-      category: "Backend",
-      yearsOfExperience: 2,
-      projectsCount: 10,
-      proficiency: "Advanced",
-      my_remarks: "JavaScript everywhere! Perfect for building fast, scalable server-side applications.",
-    },
-    {
-      name: "Next.js",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-      level: 88,
-      color: "from-gray-700 to-gray-900",
-      category: "Framework",
-      yearsOfExperience: 1.5,
-      projectsCount: 8,
-      proficiency: "Advanced",
-      my_remarks: "The best React framework for production apps. SSR, routing, and optimization out of the box!",
-    },
-    {
-      name: "PostgreSQL",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-      level: 75,
-      color: "from-blue-600 to-indigo-600",
-      category: "Database",
-      yearsOfExperience: 1.5,
-      projectsCount: 7,
-      proficiency: "Intermediate",
-      my_remarks: "Powerful and reliable database. Still learning advanced query optimization techniques.",
-    },
-    {
-      name: "Tailwind CSS",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
-      level: 92,
-      color: "from-teal-400 to-cyan-500",
-      category: "Styling",
-      yearsOfExperience: 2,
-      projectsCount: 20,
-      proficiency: "Expert",
-      my_remarks: "Never going back to traditional CSS. Utility-first approach is a game changer for rapid development.",
-    },
-    {
-      name: "Docker",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-      level: 92,
-      color: "from-teal-400 to-cyan-500",
-      category: "tools",
-      yearsOfExperience: 2,
-      projectsCount: 20,
-      proficiency: "Beginner",
-      my_remarks: "Great for containerizing applications, ensuring consistency across environments.",
-    },
-  ]
-
-  const playHoverSound = () => {
-    const audio = new Audio(
-      "https://www.myinstants.com/media/sounds/system-notifikason-solo-leveling.mp3"
-    )
-    audio.volume = 0.1
-    audio.play().catch(() => {})
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.volume = 0.05
+      audioRef.current.play().catch(() => {})
+    }
   }
 
   return (
-    <div className="relative min-h-screen bg-background py-20 overflow-hidden">
-      {/* Particles — safe on client only */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((p, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/30 rounded-full animate-float"
-            style={{
-              left: p.left,
-              top: p.top,
-              animationDelay: p.delay,
-              animationDuration: p.duration,
-            }}
-          />
-        ))}
-      </div>
+    <section className="relative min-h-screen bg-background py-24 overflow-hidden" id="skills">
+      {/* Background Grid & Scanlines */}
+      
+      <div className="container relative z-10 mx-auto px-4">
+        {/* Header */}
+        <ModuleHeader title="My Skills" title2="My Skills" description="My Skills" />
 
-      <div className="container relative z-10 mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-16 relative">
-          <Badge variant="outline" className="mb-4 border-primary text-primary">
-            ⚡ Tech Arsenal
-          </Badge>
-
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-3">
-            My Tech Stack
-          </h1>
-
-          <p className="text-muted-foreground text-lg">Click on any skill to learn more</p>
-
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-        </div>
-
-        {/* SKILL GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 place-items-center max-w-4xl mx-auto">
+        {/* Skills Grid */}
+        <div className="flex flex-wrap justify-center gap-8 max-w-5xl mx-auto perspective-1000">
           {skills.map((skill, idx) => (
             <div
               key={idx}
-              className={`relative group ${idx % 2 === 1 ? "md:mt-12 mt-0" : "mt-0"}`}
+              className="relative group w-32 h-36 md:w-40 md:h-44 cursor-pointer"
+              onMouseEnter={() => {
+                setHoveredSkill(skill.name)
+              }}
+              onMouseLeave={() => setHoveredSkill(null)}
+              onClick={() => { setSelectedSkill(skill); playSound(); }}
             >
-              {/* Glow */}
-              <div
-                className={`absolute inset-0 blur-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 bg-gradient-to-br ${skill.color}`}
-                style={{ transform: "scale(1.5)" }}
-              ></div>
+              {/* Hexagon Container */}
+              <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-110 group-hover:z-10">
+                <HexagonFrame isActive={hoveredSkill === skill.name} color={skill.color} />
 
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className="relative w-32 h-32 cursor-pointer focus:outline-none"
-                    onMouseEnter={() => setHoveredSkill(skill.name)}
-                    onMouseLeave={() => setHoveredSkill(null)}
-                    onClick={playHoverSound}
+                {/* Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 z-20">
+                  <div
+                    className={cn(
+                      "w-12 h-12 md:w-16 md:h-16 mb-2 transition-all duration-300",
+                      hoveredSkill === skill.name
+                        ? "scale-110 drop-shadow-[0_0_15px_rgba(6,182,212,0.8)]"
+                        : "grayscale opacity-70",
+                    )}
                   >
-                    {/* HUD Frame */}
-                    <svg
-                      className="absolute inset-0 w-full h-full pointer-events-none z-10 transition-all duration-300"
-                      viewBox="0 0 100 100"
-                    >
-                      <defs>
-                        <filter id={`glow-${idx}`}>
-                          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                          <feMerge>
-                            <feMergeNode in="coloredBlur" />
-                            <feMergeNode in="SourceGraphic" />
-                          </feMerge>
-                        </filter>
-                      </defs>
+                    <img
+                      src={skill.logo || "/placeholder.svg"}
+                      alt={skill.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
-                      <polygon
-                        points="50,5 90,28 90,72 50,95 10,72 10,28"
-                        fill="none"
-                        stroke="oklch(0.6912 0.1569 240.2888)"
-                        strokeWidth="1"
-                        className={`transition-all duration-300 ${
-                          hoveredSkill === skill.name
-                            ? "opacity-100 stroke-[2]"
-                            : "opacity-40"
-                        }`}
-                        filter={hoveredSkill === skill.name ? `url(#glow-${idx})` : ""}
-                      />
-                    </svg>
+                  <div
+                    className={cn(
+                      "text-[10px] md:text-xs font-mono font-bold uppercase tracking-wider transition-colors duration-300",
+                      hoveredSkill === skill.name ? "text-cyan-300" : "text-slate-500",
+                    )}
+                  >
+                    {skill.name}
+                  </div>
 
-                    {/* Skill Logo */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div
-                        className={`relative transition-all duration-300 ${
-                          hoveredSkill === skill.name ? "scale-110" : "scale-100"
-                        }`}
-                      >
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-br ${skill.color} blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-300`}
-                        ></div>
-
-                        <div className="relative w-20 h-20 rounded-lg bg-card/80 backdrop-blur-sm border border-border group-hover:border-primary flex items-center justify-center p-3 transition-all duration-300">
-                          <img
-                            src={skill.logo}
-                            alt={skill.name}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Level */}
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-primary text-primary-foreground rounded-full text-[10px] font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                      Lv {skill.level}
-                    </div>
-                  </button>
-                </PopoverTrigger>
-
-                <PopoverContent side="top" className="w-96 p-0 border-border shadow-2xl" sideOffset={16}>
-                  <Skill {...skill} />
-                </PopoverContent>
-              </Popover>
-
-              {/* Name */}
-              <div className="text-center mt-4">
-                <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                  {skill.name}
-                </p>
+                  {/* Level Indicator */}
+                  <div
+                    className={cn(
+                      "absolute -bottom-4 px-2 py-0.5 bg-cyan-950 border border-cyan-500/50 rounded text-[9px] font-mono text-cyan-400 transition-opacity duration-300",
+                      hoveredSkill === skill.name ? "opacity-100" : "opacity-0",
+                    )}
+                  >
+                    LVL.{skill.level}
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Float Animation */}
-      <style jsx>
-        {`
-          @keyframes float {
-            0%,
-            100% {
-              transform: translateY(0) translateX(0);
-              opacity: 0;
-            }
-            10% {
-              opacity: 0.3;
-            }
-            50% {
-              transform: translateY(-100px) translateX(50px);
-              opacity: 0.5;
-            }
-            90% {
-              opacity: 0.3;
-            }
-          }
-          .animate-float {
-            animation: float linear infinite;
-          }
-        `}
-      </style>
-    </div>
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selectedSkill && <SkillDetailWindow skill={selectedSkill} onClose={() => setSelectedSkill(null)} />}
+      </AnimatePresence>
+    </section>
   )
 }

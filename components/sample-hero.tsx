@@ -20,8 +20,8 @@ interface DevProfileProps {
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative w-full min-h-screen bg-background py-20 overflow-hidden">
-      {/* Background gaming SVG elements */}
+    <section className="relative w-full min-h-screen bg-[#020617] py-20 overflow-hidden">
+      {/* Background*/}
       <svg
         className="fixed inset-0 w-full h-full pointer-events-none text-blue-400"
         viewBox="0 0 1000 1000"
@@ -69,7 +69,7 @@ const HeroSection: React.FC = () => {
 
 
       <div className="container relative z-10 mt-20 mx-auto flex flex-col lg:flex-row items-center gap-12 px-4 lg:px-12">
-        {/* Left: Text */}
+        {/* Left */}
         <div className="flex-1 space-y-6 max-w-3xl">
           <div className="inline-block">
             <Badge variant="outline" className="mb-4 border-primary text-primary">
@@ -117,7 +117,7 @@ I also handle frontend development, ensuring end-to-end solutions that meet mode
         <div className="flex-1 max-w-md lg:ml-auto lg:max-w-lg w-full">
           <DevProfileCard
             name="Mark Tristan C. Garcia"
-            level={12}
+            level={'E'}
             avatarUrl="/profile1.jpg"
             title="Full Stack Developer"
             skills={['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL']}

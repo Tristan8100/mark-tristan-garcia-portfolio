@@ -6,12 +6,14 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { InView } from '@/components/ui/in-view';
+import Module from 'module'
+import ModuleHeader from './module-header'
 
 const AboutMeSection: React.FC = () => {
 
   return (
-    <section className="relative w-full bg-background py-20 overflow-hidden">
-      {/* Background decorative elements */}
+    <section className="relative w-full bg-background py-20 overflow-hidden" id="about-me">
+      {/* Backgrounds */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none" viewBox="0 0 1000 1000">
         <defs>
           <pattern id="aboutGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -24,17 +26,7 @@ const AboutMeSection: React.FC = () => {
 
       <div className="container relative z-10 mx-auto px-4 max-w-6xl">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 border-primary text-primary">
-            👨‍💻 About Me
-          </Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold mb-4">
-            Crafting Digital Experiences
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A passionate developer dedicated to building innovative solutions that make a difference.
-          </p>
-        </div>
+        <ModuleHeader title="ABOUT ME" title2="Everything You Need to Know" description="Learn more about me and my journey as a developer." />
 
         {/* Main About Card with Gaming Border */}
         <div className="relative w-full mb-12">
@@ -107,7 +99,7 @@ const AboutMeSection: React.FC = () => {
           </svg>
 
           {/* Card Content */}
-          <Card className="relative border-border bg-card overflow-hidden">
+          <Card className="relative border-border bg-background overflow-hidden">
             <CardContent className="p-8 lg:p-12 relative z-10">
               <div className="grid lg:grid-cols-[300px_1fr] gap-8 items-start">
                 {/* Left: Profile Picture */}
@@ -116,10 +108,10 @@ const AboutMeSection: React.FC = () => {
                     {/* Avatar glow effect */}
                     <div className="absolute bg-primary/20 blur-2xl rounded-full"></div>
                       <img src="/profile1.jpg" alt="Profile" className='object-cover rounded-full w-64 h-64 border-4 border-primary shadow-2xl shadow-primary/30' />
-                    {/* Level badge overlay */}
+                    {/* Level badge overlay 
                     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold shadow-lg">
                       Level 42
-                    </div>
+                    </div> */}
                   </div>
                   <div className="text-center">
                     <h3 className="text-xl font-bold text-foreground">Tristan</h3>
@@ -129,7 +121,7 @@ const AboutMeSection: React.FC = () => {
 
                 {/* Right: Story */}
                 <div className="space-y-6">
-                  {/* Right: Enhanced About Me */}
+                  {/* Right: Enhanced About Me Again! */}
                   <div className="space-y-6 h-72 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/40 scrollbar-track-secondary/20">
                     <h3 className="text-2xl font-bold text-foreground mb-4">My Journey</h3>
                     <div className="space-y-4">

@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { supabase } from '@/lib/supabaseClient'
-import { ExternalLink, Clock, Loader2 } from 'lucide-react'
+import { useEffect, useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { supabase } from "@/lib/supabaseClient"
+import { Clock, Loader2, ArrowUpRight, Database, Trophy } from "lucide-react"
+import Link from "next/link"
+import ModuleHeader from "./module-header"
 
 interface Portfolio {
   id: number
@@ -14,20 +14,21 @@ interface Portfolio {
   rank?: number
   time_to_develop?: string
   created_at?: string
+  stack?: string[]
 }
 
 export default function PortfolioShowcase() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
 
   useEffect(() => {
     const loadPortfolios = async () => {
       setLoading(true)
       const { data, error } = await supabase
-        .from('portfolio')
-        .select('id, title, thumbnail, rank, time_to_develop, created_at')
-        .order('rank', { ascending: true })
+        .from("portfolio")
+        .select("id, title, thumbnail, rank, time_to_develop, created_at, stack")
+        .order("rank", { ascending: true })
 
       if (!error && data) {
         setPortfolios(data)
@@ -38,192 +39,181 @@ export default function PortfolioShowcase() {
     loadPortfolios()
   }, [])
 
+  // Bento grid layout pattern - defines which cards are large
+  const getBentoClass = (index: number) => {
+    const patterns = [
+      "md:col-span-2 md:row-span-2", // Large featured
+      "md:col-span-1 md:row-span-1", // Regular
+      "md:col-span-1 md:row-span-1", // Regular
+      "md:col-span-2 md:row-span-1", // Wide
+      "md:col-span-1 md:row-span-2", // Tall
+      "md:col-span-1 md:row-span-1", // Regular
+    ]
+    return patterns[index % patterns.length]
+  }
+
+  const isLargeCard = (index: number) => {
+    return index % 6 === 0 // Every 6th card is the large featured one
+  }
+
   if (loading) {
     return (
-      <section className="relative w-full bg-background py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <section className="relative w-full min-h-screen bg-[#020617] py-20 flex flex-col items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 animate-ping rounded-full bg-cyan-500/20" />
+            <Loader2 className="h-12 w-12 animate-spin text-cyan-400" />
           </div>
+          <div className="font-mono text-cyan-400 animate-pulse">SYSTEM INITIALIZING...</div>
         </div>
       </section>
     )
   }
 
   return (
-    <section className="relative w-full bg-background py-20 overflow-hidden">
-      {/* Background Effects */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none" viewBox="0 0 1000 1000">
-        <defs>
-          <pattern id="portfolioGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="20" r="1" className="[fill:oklch(0.6912_0.1569_240.2888)]" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#portfolioGrid)" />
-        <path d="M 0 500 Q 250 400 500 500 T 1000 500" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="3" fill="none" opacity="0.2" />
-      </svg>
+    <section className="relative w-full bg-[#020617] py-20 overflow-hidden min-h-screen" id="projects">
+      {/* System Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        {/* Scanlines */}
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#000_3px)] opacity-20" />
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #020617 100%)" />
+      </div>
 
-      <div className="container relative z-10 mx-auto px-4 max-w-6xl">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 border-primary text-primary">
-            💼 Portfolio
-          </Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold mb-4">
-            Featured Projects
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A collection of my best work showcasing skills in web development and design.
-          </p>
-          {/* HUD decoration line */}
-          <div className="mt-6 mx-auto w-32 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-        </div>
+      <div className="container relative z-10 mx-auto px-4 max-w-7xl">
+        {/* System Header */}
 
-        {/* Portfolio Grid */}
+          <ModuleHeader title="PORTFOLIO" title2="PROJECTS" description={`AVAILABLE PROJECTS: ${portfolios.length}`} />
+
+        {/* Bento Grid */}
         {portfolios.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground">No projects available yet.</p>
+          <div className="text-center py-20 border border-dashed border-cyan-500/20 rounded-lg bg-cyan-950/5">
+            <p className="text-cyan-400/50 font-mono">NO DATA FOUND IN SYSTEM</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {portfolios.map((project, index) => (
-              <div
-                key={project.id}
-                className="relative group"
-                onMouseEnter={() => setSelectedId(project.id)}
-                onMouseLeave={() => setSelectedId(null)}
-              >
-                {/* Gaming HUD Border */}
-                <svg
-                  className={`absolute inset-0 w-full h-full pointer-events-none z-10 transition-opacity duration-300 ${
-                    selectedId === project.id ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  viewBox="0 0 300 400"
-                  preserveAspectRatio="none"
+          <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-[280px] gap-6">
+            {portfolios.map((project, index) => {
+              const isLarge = isLargeCard(index)
+              const isHovered = hoveredId === project.id
+
+              return (
+                <Link
+                  href={`/portfolio/${project.id}`}
+                  key={project.id}
+                  className={`group relative transition-all duration-500 cursor-pointer ${getBentoClass(index)}`}
+                  onMouseEnter={() => setHoveredId(project.id)}
+                  onMouseLeave={() => setHoveredId(null)}
                 >
-                  <defs>
-                    <linearGradient id={`project-grad-${project.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" className="[stop-color:oklch(0.6912_0.1569_240.2888)]" stopOpacity="0.6" />
-                      <stop offset="100%" className="[stop-color:oklch(0.6912_0.1569_240.2888)]" stopOpacity="0.3" />
-                    </linearGradient>
-                    <filter id={`project-glow-${project.id}`}>
-                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  
-                  {/* Top-left corner */}
-                  <g filter={`url(#project-glow-${project.id})`}>
-                    <path d="M0 0 L50 0 L40 10 L10 10 L10 40 L0 50 Z" fill={`url(#project-grad-${project.id})`} />
-                    <path d="M0 0 L50 0 M0 0 L0 50" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                    <circle cx="40" cy="10" r="3" className="[fill:oklch(0.6912_0.1569_240.2888)]" />
-                  </g>
-                  
-                  {/* Top-right corner */}
-                  <g filter={`url(#project-glow-${project.id})`}>
-                    <path d="M300 0 L250 0 L260 10 L290 10 L290 40 L300 50 Z" fill={`url(#project-grad-${project.id})`} />
-                    <path d="M300 0 L250 0 M300 0 L300 50" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                    <circle cx="260" cy="10" r="3" className="[fill:oklch(0.6912_0.1569_240.2888)]" />
-                  </g>
-                  
-                  {/* Bottom-left corner */}
-                  <g filter={`url(#project-glow-${project.id})`}>
-                    <path d="M0 400 L50 400 L40 390 L10 390 L10 360 L0 350 Z" fill={`url(#project-grad-${project.id})`} />
-                    <path d="M0 400 L50 400 M0 400 L0 350" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                    <circle cx="40" cy="390" r="3" className="[fill:oklch(0.6912_0.1569_240.2888)]" />
-                  </g>
-                  
-                  {/* Bottom-right corner */}
-                  <g filter={`url(#project-glow-${project.id})`}>
-                    <path d="M300 400 L250 400 L260 390 L290 390 L290 360 L300 350 Z" fill={`url(#project-grad-${project.id})`} />
-                    <path d="M300 400 L250 400 M300 400 L300 350" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="2" />
-                    <circle cx="260" cy="390" r="3" className="[fill:oklch(0.6912_0.1569_240.2888)]" />
-                  </g>
-
-                  {/* Side scan lines */}
-                  <line x1="5" y1="120" x2="5" y2="150" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="1.5" opacity="0.5" />
-                  <line x1="5" y1="250" x2="5" y2="280" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="1.5" opacity="0.5" />
-                  <line x1="295" y1="120" x2="295" y2="150" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="1.5" opacity="0.5" />
-                  <line x1="295" y1="250" x2="295" y2="280" className="[stroke:oklch(0.6912_0.1569_240.2888)]" strokeWidth="1.5" opacity="0.5" />
-                </svg>
-
-                {/* Card */}
-                <Card className="relative border-border bg-card hover:border-primary transition-all hover:shadow-xl hover:shadow-primary/20 overflow-hidden cursor-pointer h-full flex flex-col">
-                  {/* Thumbnail */}
-                  <div className="relative aspect-video w-full overflow-hidden bg-secondary/20">
-                    {project.thumbnail ? (
-                      <img
-                        src={project.thumbnail}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                        No Preview
-                      </div>
-                    )}
-                    
-                    {/* Rank Badge */}
-                    {project.rank && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-primary/90 text-primary-foreground backdrop-blur-sm shadow-lg">
-                          #{project.rank}
-                        </Badge>
-                      </div>
-                    )}
-
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                      <Button size="sm" variant="secondary" className="gap-2">
-                        View Details
-                        <ExternalLink className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="flex-1">
-                      <h3 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                        {project.title}
-                      </h3>
-                      
-                      {/* Time to develop */}
-                      {project.time_to_develop && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Clock className="h-4 w-4" />
-                          <span>{project.time_to_develop}</span>
+                  {/* Card Container */}
+                  <div className="absolute inset-0 bg-[#0a0f1e]/80 backdrop-blur-sm border border-cyan-900/50 overflow-hidden transition-all duration-300 group-hover:border-cyan-400/50 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.15)]">
+                    {/* Background Image with System Overlay */}
+                    <div className="absolute inset-0 z-0">
+                      {project.thumbnail ? (
+                        <>
+                          <img
+                            src={project.thumbnail || "/placeholder.svg"}
+                            alt={project.title}
+                            className="w-full h-full object-cover opacity-40 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-60 grayscale group-hover:grayscale-0"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent" />
+                          {/* Grid Overlay on Image */}
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20" />
+                        </>
+                      ) : (
+                        <div className="w-full h-full bg-cyan-950/10 flex items-center justify-center">
+                          <Database className="w-12 h-12 text-cyan-900/40" />
                         </div>
                       )}
                     </div>
 
-                    {/* Stats bar at bottom */}
-                    <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-primary animate-pulse"></div>
-                        <span className="text-xs text-muted-foreground font-mono">ACTIVE</span>
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        Project #{index + 1}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </div>
-        )}
+                    {/* System UI Overlays */}
+                    <div className="absolute inset-0 z-10 p-6 flex flex-col justify-between">
+                      {/* Top Bar */}
+                      <div className="flex justify-between items-start">
+                        <div className="flex flex-col gap-1">
+                          {project.rank && (
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-cyan-950/50 border border-cyan-500/30 text-cyan-400 font-mono rounded-none px-2">
+                                RANK: {project.rank <= 3 ? "S" : project.rank <= 6 ? "A" : "B"}
+                              </Badge>
+                              {project.rank <= 3 && <Trophy className="w-3 h-3 text-yellow-500" />}
+                            </div>
+                          )}
+                        </div>
 
-        {/* View All Button */}
-        {portfolios.length > 0 && (
-          <div className="text-center mt-12">
-            <Button size="lg" className="shadow-lg shadow-primary/20">
-              View All Projects
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
+                        {/* Corner Decoration */}
+                        <div
+                          className={`w-8 h-8 border-t-2 border-r-2 transition-colors duration-300 ${isHovered ? "border-cyan-400" : "border-cyan-800/30"}`}
+                        />
+                      </div>
+
+                      {/* Content Area */}
+                      <div className="space-y-4">
+                        <div>
+                          <h3
+                            className={`font-bold text-white tracking-wide group-hover:text-cyan-400 transition-colors ${isLarge ? "text-3xl" : "text-xl"}`}
+                          >
+                            {project.title}
+                          </h3>
+
+                          {project.time_to_develop && (
+                            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400/60 mt-2">
+                              <Clock className="h-3 w-3" />
+                              <span>TIME_TO_DEVELOP: {project.time_to_develop} MONTH(S)</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Tech Stack / Skills */}
+                        {project.stack && project.stack.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.stack.slice(0, isLarge ? 6 : 3).map((tech, idx) => (
+                              <span
+                                key={idx}
+                                className="text-[10px] font-mono px-1.5 py-0.5 border border-cyan-500/20 bg-cyan-500/5 text-cyan-300/80 uppercase"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                            {project.stack.length > (isLarge ? 6 : 3) && (
+                              <span className="text-[10px] font-mono px-1.5 py-0.5 border border-cyan-500/20 bg-cyan-500/5 text-cyan-300/80">
+                                +{project.stack.length - (isLarge ? 6 : 3)}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Action Line */}
+                        <div className="flex items-center justify-between pt-2 border-t border-cyan-500/10">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`h-1.5 w-1.5 rounded-full ${isHovered ? "bg-cyan-400 shadow-[0_0_5px_#22d3ee]" : "bg-cyan-900"}`}
+                            />
+                            <span className="text-[10px] font-mono text-cyan-500/50 tracking-wider">
+                              STATUS: COMPLETE
+                            </span>
+                          </div>
+                          <ArrowUpRight
+                            className={`w-4 h-4 text-cyan-400 transition-transform duration-300 ${isHovered ? "translate-x-1 -translate-y-1 opacity-100" : "opacity-0"}`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Decorative Corners */}
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-800/30 group-hover:border-cyan-400 transition-colors duration-300" />
+
+                    {/* Scanning Effect */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent translate-y-[-100%] transition-transform duration-1000 ${isHovered ? "translate-y-[100%]" : ""}`}
+                    />
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>
