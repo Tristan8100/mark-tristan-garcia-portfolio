@@ -13,6 +13,9 @@ import { useTheme } from "next-themes"
 import { useEffect, useState } from "react";
 import SkillSection from "@/components/skills-compoment";
 import PortfolioShowcase from "@/components/portfolio";
+import GithubChart from "@/components/github-chart";
+import { ContactModule } from "@/components/contacts";
+
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
@@ -26,6 +29,9 @@ export default function Home() {
       <AboutMeSection />
       <SkillSection />
       <PortfolioShowcase />
+      <GithubChart />
+      <ContactModule />
+
       
 
 
