@@ -11,7 +11,7 @@ interface Portfolio {
   id: number
   title: string
   thumbnail?: string
-  rank?: number
+  rank?: string
   time_to_develop?: string
   created_at?: string
   stack?: string[]
@@ -137,9 +137,9 @@ export default function PortfolioShowcase() {
                           {project.rank && (
                             <div className="flex items-center gap-2">
                               <Badge className="bg-cyan-950/50 border border-cyan-500/30 text-cyan-400 font-mono rounded-none px-2">
-                                RANK: {project.rank <= 3 ? "S" : project.rank <= 6 ? "A" : "B"}
+                                RANK: {project.rank}
                               </Badge>
-                              {project.rank <= 3 && <Trophy className="w-3 h-3 text-yellow-500" />}
+                              {project.rank === "S" && <Trophy className="w-3 h-3 text-yellow-500" />}
                             </div>
                           )}
                         </div>

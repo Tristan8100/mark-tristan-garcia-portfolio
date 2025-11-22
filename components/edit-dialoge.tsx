@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, X, Upload, ImageIcon, LinkIcon, FileText } from 'lucide-react';
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 interface Portfolio {
   id: number;
@@ -41,14 +41,14 @@ export default function EditPortfolioDialog({ portfolio, onUpdated }: EditPortfo
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [title, setTitle] = useState(portfolio.title || "");
-  const [rank, setRank] = useState(portfolio.rank || "");
-  const [description, setDescription] = useState(portfolio.description || "");
-  const [timeToDevelop, setTimeToDevelop] = useState(portfolio.time_to_develop || "");
-  const [urls, setUrls] = useState(portfolio.urls || {});
-  const [images, setImages] = useState(portfolio.images || []);
-  const [thumbnail, setThumbnail] = useState(portfolio.thumbnail || "");
-  const [stack, setStack] = useState<string[]>(portfolio.stack || []);
+  const [title, setTitle] = useState(portfolio?.title || "");
+  const [rank, setRank] = useState(portfolio?.rank || "");
+  const [description, setDescription] = useState(portfolio?.description || "");
+  const [timeToDevelop, setTimeToDevelop] = useState(portfolio?.time_to_develop || "");
+  const [urls, setUrls] = useState(portfolio?.urls || {});
+  const [images, setImages] = useState(portfolio?.images || []);
+  const [thumbnail, setThumbnail] = useState(portfolio?.thumbnail || "");
+  const [stack, setStack] = useState<string[]>(portfolio?.stack || []);
   const [newStackItem, setNewStackItem] = useState("");
 
   // Upload file and return public URL
@@ -231,7 +231,87 @@ export default function EditPortfolioDialog({ portfolio, onUpdated }: EditPortfo
 
               {/* MEDIA */}
               <TabsContent value="media" className="mt-0 space-y-6">
-                {/* ...thumbnail and images UI remains unchanged */}
+                {/* Thumbnail */}
+                <div className="space-y-3">
+                  <Label>Thumbnail Image</Label>
+                  <Card className="overflow-hidden border-dashed">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-4">
+                        {thumbnail ? (
+                          <div className="relative w-40 h-24 rounded-md overflow-hidden border shrink-0">
+                            <img
+                              src={thumbnail}
+                              alt="Thumbnail"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-40 h-24 rounded-md bg-muted flex items-center justify-center shrink-0">
+                            <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="flex-1 space-y-2">
+                          <p className="text-sm text-muted-foreground">
+                            Upload a cover image for your project card. Recommended ratio 16:9.
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              className="max-w-xs"
+                              onChange={(e) =>
+                                e.target.files && changeThumbnail(e.target.files[0])
+                              }
+                              disabled={loading}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Gallery Images */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label>Project Gallery</Label>
+                    <span className="text-xs text-muted-foreground">{images.length} images</span>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto max-h-[350px]">
+                    {images.map((url) => (
+                      <div key={url} className="relative group aspect-video rounded-md overflow-hidden border bg-muted">
+                        <img
+                          src={url}
+                          alt="Gallery"
+                          className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            className="h-8 w-8"
+                            onClick={() => deleteImage(url)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+
+                    <label className="flex flex-col items-center justify-center aspect-video rounded-md border border-dashed hover:bg-muted/50 cursor-pointer transition-colors">
+                      <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <span className="text-xs text-muted-foreground">Add Images</span>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={(e) => e.target.files && addImages(e.target.files)}
+                        disabled={loading}
+                      />
+                    </label>
+                  </div>
+                </div>
               </TabsContent>
 
               {/* STACK */}

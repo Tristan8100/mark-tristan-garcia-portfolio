@@ -56,7 +56,7 @@ export function ContactModule() {
   return (
     <section className="w-full max-w-4xl mx-auto mt-32 mb-32 p-4" id="contacts">
       <ModuleHeader
-        title="Contact"
+        title="Contacts"
         title2="contact information"
         description="My contact details and availability."
       />
