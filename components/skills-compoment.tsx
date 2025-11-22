@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Module from "module"
 import ModuleHeader from "./module-header"
+import { Button } from "./ui/button"
 
 // --- Types ---
 interface SkillProps {
@@ -23,83 +24,149 @@ interface SkillProps {
 // --- Data ---
 const skills: SkillProps[] = [
   {
-    name: "React.js",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-    level: 90,
-    color: "cyan",
-    category: "Frontend",
-    yearsOfExperience: 2.5,
-    projectsCount: 15,
-    proficiency: "Advanced",
-    my_remarks: "Core system component. High synchronization rate with UI logic.",
-  },
-  {
-    name: "TypeScript",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-    level: 85,
-    color: "blue",
-    category: "Language",
-    yearsOfExperience: 2,
-    projectsCount: 12,
-    proficiency: "Advanced",
-    my_remarks: "Enhances system stability. Prevents runtime anomalies.",
-  },
-  {
-    name: "Node.js",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-    level: 80,
-    color: "green",
+    name: "Laravel",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg",
+    level: 60,
+    color: "red",
     category: "Backend",
-    yearsOfExperience: 2,
+    yearsOfExperience: 1,
     projectsCount: 10,
-    proficiency: "Advanced",
-    my_remarks: "Server-side processing unit. Scalable architecture supported.",
+    proficiency: "Intermediate",
+    my_remarks: "I'm most proficient in this framework, I've tried breeze auth, blade, inertia using react, livewire but I mostly prefer creating API with it, I've done most of my projects in this framework including our capstone project.",
   },
   {
-    name: "Next.js",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-    level: 88,
-    color: "white",
-    category: "Framework",
+    name: "Express.js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+    level: 35,
+    color: "gray",
+    category: "Backend",
+    yearsOfExperience: 0.5,
+    projectsCount: 4,
+    proficiency: "Beginner",
+    my_remarks: "pretty straight forward, but will be a mess if you scale a larger system, that's why I prefer Nest js.",
+  },
+  {
+    name: "Nest js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg",
+    level: 35,
+    color: "rose",
+    category: "Backend",
+    yearsOfExperience: 0.1,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "A perfect combination of Express unopinionated and Laravel opinionated approach. This will be my new tech stack on the backend from now on.",
+  },
+  {
+    name: "Node js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+    level: 45,
+    color: "green",
+    category: "Runtime",
+    yearsOfExperience: 1,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "Useful to run server side using JavaScript.",
+  },
+  {
+    name: "Php",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+    level: 50,
+    color: "indigo",
+    category: "Language",
     yearsOfExperience: 1.5,
     projectsCount: 8,
-    proficiency: "Advanced",
-    my_remarks: "Optimized for production. SSR and routing capabilities active.",
+    proficiency: "Intermediate",
+    my_remarks: "My first server side programming language where I created my own MVC pattern.",
   },
   {
-    name: "PostgreSQL",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-    level: 75,
-    color: "indigo",
-    category: "Database",
-    yearsOfExperience: 1.5,
-    projectsCount: 7,
+    name: "Typescript",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    level: 50,
+    color: "blue",
+    category: "Language",
+    yearsOfExperience: 1,
+    projectsCount: 6,
     proficiency: "Intermediate",
-    my_remarks: "Data persistence layer. Query optimization in progress.",
+    my_remarks: "This is no longer an option, it is required, though I still use 'any' sometimes and forgot to add data types.",
+  },
+  {
+    name: "Bootstrap",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
+    level: 45,
+    color: "purple",
+    category: "Styling",
+    yearsOfExperience: 1.5,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "My first CSS framework, it has jQuery for some components interactivity which helps a lot when I'm starting, though it's not that customizable.",
   },
   {
     name: "Tailwind CSS",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
-    level: 92,
+    level: 55,
     color: "teal",
     category: "Styling",
-    yearsOfExperience: 2,
-    projectsCount: 20,
-    proficiency: "Expert",
-    my_remarks: "Rapid UI deployment protocol. Utility-first styling engine.",
+    yearsOfExperience: 1,
+    projectsCount: 8,
+    proficiency: "Intermediate",
+    my_remarks: "One of the standards in using React with Shadcn, I prefer this over bootstrap since most component libraries use tailwind.",
+  },
+  {
+    name: "React js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    level: 50,
+    color: "cyan",
+    category: "Frontend",
+    yearsOfExperience: 1,
+    projectsCount: 7,
+    proficiency: "Intermediate",
+    my_remarks: "Will never go back to vanilla JavaScript.",
+  },
+  {
+    name: "Next js",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+    level: 45,
+    color: "white",
+    category: "Framework",
+    yearsOfExperience: 1,
+    projectsCount: 6,
+    proficiency: "Beginner",
+    my_remarks: "I haven't fully utilized the server side capabilities of this framework since all my projects use csr since it doesn't need seo, but still a great framework and will be my permanent tech stack on the frontend.",
   },
   {
     name: "Docker",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-    level: 92,
+    level: 30,
     color: "sky",
     category: "DevOps",
-    yearsOfExperience: 2,
-    projectsCount: 20,
+    yearsOfExperience: 0.8,
+    projectsCount: 3,
     proficiency: "Beginner",
-    my_remarks: "Containerization protocol. Environment consistency guaranteed.",
+    my_remarks: "I've used it on my Laravel projects, given the lack of a free hosting provider, I decided to use Dockerfile on laravel to host on Render, I'm surprised that this Docker is indeed a game changer.",
   },
-]
+  {
+    name: "firebase",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+    level: 40,
+    color: "yellow",
+    category: "Backend-as-a-Service",
+    yearsOfExperience: 0.8,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "This is my first time dealing with a nosql database and backend as a service, perfect for a simple web app but I'm not into nosql.",
+  },
+  {
+    name: "supabase",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
+    level: 45,
+    color: "emerald",
+    category: "Database",
+    yearsOfExperience: 0.3,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "My first time using postgresql in this portfolio project, perfect for small to medium web apps that need to host quickly.",
+  },
+];
 
 // --- Components ---
 
@@ -213,12 +280,12 @@ const SkillDetailWindow = ({ skill, onClose }: { skill: SkillProps; onClose: () 
         </div>
 
         {/* Close Button */}
-        <button
+        <Button
           onClick={onClose}
           className="w-full py-3 bg-cyan-950/50 hover:bg-cyan-900/50 border border-cyan-500/30 text-cyan-400 font-mono text-sm uppercase tracking-widest transition-colors"
         >
           Close Window
-        </button>
+        </Button>
       </div>
     </motion.div>
   )

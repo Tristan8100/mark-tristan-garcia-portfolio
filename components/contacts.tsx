@@ -41,7 +41,7 @@ const contacts: ContactItem[] = [
   },
   {
     label: "Availability",
-    value: "Open for internships",
+    value: "Open for internship",
     icon: <Zap size={18} />,
   },
   {

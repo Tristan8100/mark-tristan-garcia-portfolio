@@ -127,10 +127,10 @@ const DevProfileCard: React.FC<DevProfileProps> = ({
                   </AvatarFallback>
                 </Avatar>
               </div>
-              {/* Level Tag */}
+              {/* Level Tag 
               <div className="absolute -bottom-2 -right-2 bg-slate-950 border border-cyan-400 text-cyan-300 text-xs font-bold px-2 py-0.5 shadow-lg z-20">
                 LV.{level}
-              </div>
+              </div> */}
             </div>
           </div>
 

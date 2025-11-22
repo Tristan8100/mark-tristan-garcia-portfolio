@@ -137,8 +137,8 @@ I also handle frontend development, ensuring end-to-end solutions that meet mode
             course="BSIT"
             school="BTECH"
             topSkills={['Laravel', 'NestJS', 'PostgreSQL', 'React', 'TypeScript']}
-            projects="6+"
-            capstone="1"
+            projects="5+"
+            capstone="completed"
             jobs="N/A"
             xp="1200"
           />
