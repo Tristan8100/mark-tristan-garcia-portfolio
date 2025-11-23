@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import DevProfileCard from './id'
 import Link from 'next/link'
 import { Github, Linkedin } from 'lucide-react'
+import DownloadResumeButton from './resume'
 
 interface DevProfileProps {
   name: string
@@ -94,9 +95,7 @@ I also handle frontend development, ensuring end-to-end solutions that meet mode
               View Projects
               </Button>
             </Link>
-            <Button size="lg" variant="outline">
-              Download Resume
-            </Button>
+            <DownloadResumeButton />
           </div>
 
           {/* Stats */}

@@ -35,9 +35,9 @@ const contacts: ContactItem[] = [
   },
   {
     label: "Portfolio",
-    value: "marktristanc.dev",
+    value: "mark-tristan-garcia-portfolio.netlify.app",
     icon: <Globe size={18} />,
-    href: "https://marktristanc.dev",
+    href: "https://mark-tristan-garcia-portfolio.netlify.app",
   },
   {
     label: "Availability",
