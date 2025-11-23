@@ -18,8 +18,17 @@ import {
   Cpu,
   Shield,
   Terminal,
+  XIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  MorphingDialog,
+  MorphingDialogTrigger,
+  MorphingDialogContent,
+  MorphingDialogClose,
+  MorphingDialogImage,
+  MorphingDialogContainer,
+} from '@/components/motion-primitives/morphing-dialog';
 
 interface Project {
   id: string
@@ -107,6 +116,8 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<string>("")
   const [bootSequence, setBootSequence] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
 
   useEffect(() => {
     // Simulate system boot sequence
@@ -168,7 +179,7 @@ export default function ProjectPage() {
   const allImages = [project.thumbnail, ...(project.images || [])].filter(Boolean)
 
   return (
-    <div className="min-h-screen bg-[#020617] text-foreground relative overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+    <div className={cn("min-h-screen bg-[#020617] text-foreground relative overflow-x-hidden selection:bg-primary/30 selection:text-primary", isDialogOpen && "backdrop-blur-sm")}>
       {/* Grid Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -218,16 +229,48 @@ export default function ProjectPage() {
 
             {/* Main Display */}
             <SystemPanel title="VISUAL_FEED" className="p-0">
-              <div className="relative aspect-video w-full overflow-hidden bg-black/50 group">
+              <MorphingDialog
+                  transition={{
+                    duration: 0.3,
+                    ease: 'easeInOut',
+                  }}
+                >
+              <div className="relative w-full overflow-hidden bg-black/50 group">
                 {/* Scanline Effect */}
                 <div className="absolute inset-0 pointer-events-none z-10 scanline opacity-10" />
                 <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <img
-                  src={selectedImage || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <MorphingDialogTrigger>
+                  <img
+                    src={selectedImage || "/placeholder.svg"}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onClick={() => {setIsDialogOpen(true), console.log("Image clicked")}}
+                  />
+                </MorphingDialogTrigger>
+                
+                <MorphingDialogContainer>
+                  <MorphingDialogContent>
+                    <img
+                      src={selectedImage || "/placeholder.svg"}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </MorphingDialogContent>
+                  <MorphingDialogClose
+                    className='fixed right-6 top-6 h-fit w-fit rounded-full bg-white p-1'
+                    variants={{
+                      initial: { opacity: 0 },
+                      animate: {
+                        opacity: 1,
+                        transition: { delay: 0.3, duration: 0.1 },
+                      },
+                      exit: { opacity: 0, transition: { duration: 0 } },
+                    }}
+                  >
+                    <XIcon className='h-5 w-5 text-zinc-500' />
+                  </MorphingDialogClose>
+                </MorphingDialogContainer>
 
                 {/* HUD Overlay on Image */}
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -241,6 +284,7 @@ export default function ProjectPage() {
                   </div>
                 </div>
               </div>
+              </MorphingDialog>
             </SystemPanel>
 
             {/* Gallery Grid */}
