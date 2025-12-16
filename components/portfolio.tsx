@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { supabase } from "@/lib/supabaseClient"
@@ -25,35 +23,57 @@ export default function PortfolioShowcase() {
   useEffect(() => {
     const loadPortfolios = async () => {
       setLoading(true)
-      const { data, error } = await supabase
-        .from("portfolio")
-        .select("id, title, thumbnail, rank, time_to_develop, created_at, stack")
-        .order("rank", { ascending: true })
+      try {
+        const res = await fetch("/api/portfolio")
+        const data = await res.json()
 
-      if (!error && data) {
-        setPortfolios(data)
+        const normalizedData = data.map((item: any) => ({
+          ...item,
+          rank: ["S", "A", "B", "C", "E", "F"].includes(item.rank?.toUpperCase()) 
+            ? item.rank?.toUpperCase() 
+            : "F",
+        }))
+
+        setPortfolios(normalizedData)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     loadPortfolios()
   }, [])
 
-  // Bento grid layout pattern - defines which cards are large
-  const getBentoClass = (index: number) => {
-    const patterns = [
-      "md:col-span-2 md:row-span-2", // Large featured
-      "md:col-span-1 md:row-span-1", // Regular
-      "md:col-span-1 md:row-span-1", // Regular
-      "md:col-span-2 md:row-span-1", // Wide
-      "md:col-span-1 md:row-span-2", // Tall
-      "md:col-span-1 md:row-span-1", // Regular
-    ]
-    return patterns[index % patterns.length]
+
+  // Rank ordering for sizing (S is largest)
+  const rankOrder = { S: 0, A: 1, B: 2, C: 3, E: 4, F: 5 }
+
+  // Bento grid layout pattern based on rank
+  const getBentoClass = (rank: string) => {
+    switch (rank) {
+      case "S":
+        return "md:col-span-2 md:row-span-2" // Large featured
+      case "A":
+        return "md:col-span-2 md:row-span-1" // Wide
+      case "B":
+        return "md:col-span-1 md:row-span-2" // Tall
+      case "C":
+        return "md:col-span-1 md:row-span-1" // Regular
+      case "E":
+        return "md:col-span-1 md:row-span-1" // Regular
+      case "F":
+      default:
+        return "md:col-span-1 md:row-span-1" // Regular
+    }
   }
 
-  const isLargeCard = (index: number) => {
-    return index % 6 === 0 // Every 6th card is the large featured one
+  // Sort projects to optimize grid layout
+  const sortedPortfolios = [...portfolios].sort((a, b) => {
+    const rankOrderMap = rankOrder as Record<string, number>
+    return (rankOrderMap[a.rank as keyof typeof rankOrder] ?? 5) - (rankOrderMap[b.rank as keyof typeof rankOrder] ?? 5)
+  })
+
+  const isLargeCard = (rank: string) => {
+    return rank === "S"
   }
 
   if (loading) {
@@ -91,19 +111,21 @@ export default function PortfolioShowcase() {
         {/* Bento Grid */}
         {portfolios.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-cyan-500/20 rounded-lg bg-cyan-950/5">
-            <p className="text-cyan-400/50 font-mono">NO DATA FOUND IN SYSTEM</p>
+            <p className="text-cyan-400/50 font-mono">SERVER ERROR - ERROR FETCHING PROJECTS</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-[280px] gap-6">
-            {portfolios.map((project, index) => {
-              const isLarge = isLargeCard(index)
+          <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6">
+            {portfolios
+              .sort((a, b) => rankOrder[a.rank as keyof typeof rankOrder] - rankOrder[b.rank as keyof typeof rankOrder])
+              .map((project) => {
+              const isLarge = isLargeCard(project.rank || "F")
               const isHovered = hoveredId === project.id
 
               return (
                 <Link
                   href={`/portfolio/${project.id}`}
                   key={project.id}
-                  className={`group relative transition-all duration-500 cursor-pointer ${getBentoClass(index)}`}
+                  className={`group relative transition-all duration-500 cursor-pointer ${getBentoClass(project.rank || "F")}`}
                   onMouseEnter={() => setHoveredId(project.id)}
                   onMouseLeave={() => setHoveredId(null)}
                 >

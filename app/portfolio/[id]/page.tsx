@@ -21,14 +21,6 @@ import {
   XIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogClose,
-  MorphingDialogImage,
-  MorphingDialogContainer,
-} from '@/components/motion-primitives/morphing-dialog';
 
 interface Project {
   id: string
@@ -109,6 +101,61 @@ const RankBadge = ({ rank }: { rank: string }) => {
   )
 }
 
+// Fullscreen Image Modal
+const ImageModal = ({ src, alt, isOpen, onClose }: { src: string; alt: string; isOpen: boolean; onClose: () => void }) => {
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape)
+      document.body.style.overflow = "hidden"
+    }
+    return () => {
+      document.removeEventListener("keydown", handleEscape)
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300"
+      onClick={onClose}
+    >
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 z-50 rounded-full bg-white p-2 hover:bg-primary/20 transition-colors group"
+        aria-label="Close"
+      >
+        <XIcon className="h-5 w-5 text-black group-hover:text-white" />
+      </button>
+
+      {/* Image Container */}
+      <div
+        className="relative w-full h-full max-w-6xl max-h-[90vh] flex items-center justify-center animate-in zoom-in-95 duration-300"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={src || "/placeholder.svg"}
+          alt={alt}
+          className="w-full h-full object-contain rounded-lg"
+        />
+
+        {/* Scanline Effect */}
+        <div className="absolute inset-0 pointer-events-none z-10 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.1)_3px)] opacity-20" />
+      </div>
+
+      {/* Keyboard Hint */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-mono text-primary/50">
+        Press ESC or click to close
+      </div>
+    </div>
+  )
+}
+
 export default function ProjectPage() {
   const params = useParams()
   const router = useRouter()
@@ -116,8 +163,7 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<string>("")
   const [bootSequence, setBootSequence] = useState(true)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     // Simulate system boot sequence
@@ -179,7 +225,7 @@ export default function ProjectPage() {
   const allImages = [project.thumbnail, ...(project.images || [])].filter(Boolean)
 
   return (
-    <div className={cn("min-h-screen bg-[#020617] text-foreground relative overflow-x-hidden selection:bg-primary/30 selection:text-primary", isDialogOpen && "backdrop-blur-sm")}>
+    <div className={cn("min-h-screen bg-[#020617] text-foreground relative overflow-x-hidden selection:bg-primary/30 selection:text-primary")}>
       {/* Grid Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -189,9 +235,12 @@ export default function ProjectPage() {
       {/* Floating Particles/Dust (CSS only for performance) */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-20 animate-pulse bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)]" />
 
+      {/* Image Modal */}
+      <ImageModal src={selectedImage} alt={project.title} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
       <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
         {/* Top Navigation Bar */}
-        <header className="flex items-center justify-between mb-12 border-b border-primary/20 pb-4 backdrop-blur-sm sticky top-0 z-50 bg-[#020617]/80">
+        <header className="flex items-center justify-between mb-12 border-b border-primary/20 pb-4 backdrop-blur-sm sticky top-0 z-40 bg-[#020617]/80">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -229,48 +278,17 @@ export default function ProjectPage() {
 
             {/* Main Display */}
             <SystemPanel title="VISUAL_FEED" className="p-0">
-              <MorphingDialog
-                  transition={{
-                    duration: 0.3,
-                    ease: 'easeInOut',
-                  }}
-                >
-              <div className="relative w-full overflow-hidden bg-black/50 group">
+              <div className="relative w-full overflow-hidden bg-black/50 group cursor-pointer">
                 {/* Scanline Effect */}
                 <div className="absolute inset-0 pointer-events-none z-10 scanline opacity-10" />
                 <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <MorphingDialogTrigger>
-                  <img
-                    src={selectedImage || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onClick={() => {setIsDialogOpen(true), console.log("Image clicked")}}
-                  />
-                </MorphingDialogTrigger>
-                
-                <MorphingDialogContainer>
-                  <MorphingDialogContent>
-                    <img
-                      src={selectedImage || "/placeholder.svg"}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </MorphingDialogContent>
-                  <MorphingDialogClose
-                    className='fixed right-6 top-6 h-fit w-fit rounded-full bg-white p-1'
-                    variants={{
-                      initial: { opacity: 0 },
-                      animate: {
-                        opacity: 1,
-                        transition: { delay: 0.3, duration: 0.1 },
-                      },
-                      exit: { opacity: 0, transition: { duration: 0 } },
-                    }}
-                  >
-                    <XIcon className='h-5 w-5 text-zinc-500' />
-                  </MorphingDialogClose>
-                </MorphingDialogContainer>
+                <img
+                  src={selectedImage || "/placeholder.svg"}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onClick={() => setIsModalOpen(true)}
+                />
 
                 {/* HUD Overlay on Image */}
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -284,7 +302,6 @@ export default function ProjectPage() {
                   </div>
                 </div>
               </div>
-              </MorphingDialog>
             </SystemPanel>
 
             {/* Gallery Grid */}
@@ -293,7 +310,10 @@ export default function ProjectPage() {
                 {allImages.map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setSelectedImage(img)}
+                    onClick={() => {
+                      setSelectedImage(img)
+                      setIsModalOpen(true)
+                    }}
                     className={cn(
                       "relative aspect-video overflow-hidden border transition-all duration-300 group",
                       selectedImage === img
@@ -320,7 +340,7 @@ export default function ProjectPage() {
             </SystemPanel>
           </div>
 
-          {/* Right */}
+          {/* Right Column */}
           <div className="lg:col-span-4 space-y-6">
             {/* Rank Card */}
             <div className="flex items-center justify-between bg-card/30 border border-primary/20 p-6 rounded-lg backdrop-blur-sm relative overflow-hidden">
@@ -337,10 +357,6 @@ export default function ProjectPage() {
               <div className="space-y-1">
                 <SystemStat label="Development Time" value={`${project.time_to_develop || 0} MONTH(S)`} icon={Clock} />
                 <SystemStat label="Tech Stack Count" value={project.stack?.length || 0} icon={Layers} />
-                {/*}
-                {project.created_at && (
-                  <SystemStat label="Date" value={new Date(project.created_at).toLocaleDateString()} icon={Calendar} />
-                )} */}
               </div>
             </SystemPanel>
 
@@ -411,7 +427,7 @@ export default function ProjectPage() {
               </div>
             </SystemPanel>
 
-            {/* Logs, might change */}
+            {/* Logs */}
             <div className="p-4 border border-primary/10 bg-black/40 font-mono text-[10px] text-primary/40 space-y-1 h-32 overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 pointer-events-none" />
               <p>{">"} SYSTEM_CHECK_COMPLETE</p>
