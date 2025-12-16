@@ -166,6 +166,17 @@ const skills: SkillProps[] = [
     proficiency: "Beginner",
     my_remarks: "My first time using postgresql in this portfolio project, perfect for small to medium web apps that need to host quickly.",
   },
+  {
+    name: "mongoDB",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+    level: 45,
+    color: "emerald",
+    category: "Database",
+    yearsOfExperience: 0.3,
+    projectsCount: 1,
+    proficiency: "Beginner",
+    my_remarks: "This is my current go to database for my nest js projects, it's completely different on sql which will get messier over time the more complicated the relations become.",
+  },
 ];
 
 // --- Components ---
