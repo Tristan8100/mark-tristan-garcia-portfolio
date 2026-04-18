@@ -40,8 +40,8 @@ const contacts: ContactItem[] = [
     href: "https://mark-tristan-garcia-portfolio.netlify.app",
   },
   {
-    label: "Availability",
-    value: "Open for internship",
+    label: "Status",
+    value: "Open for Full-time roles",
     icon: <Zap size={18} />,
   },
   {

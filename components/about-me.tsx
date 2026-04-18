@@ -126,15 +126,24 @@ const AboutMeSection: React.FC = () => {
                     <h3 className="text-2xl font-bold text-foreground mb-4">My Journey</h3>
                     <div className="space-y-4">
                       <p className="text-muted-foreground leading-relaxed">
-                        I&apos;m a student and aspiring full-stack developer, passionate about creating applications that are both functional and elegant. 
-                        I enjoy exploring different approaches to solving problems and continuously improving my coding skills.
+                        I am a Full-Stack Developer with experience in building production-ready 
+                        web applications and custom digital solutions. Currently working as a 
+                        part-time and freelance developer, I focus on delivering 
+                        software that is stable, secure, and built to scale.
                       </p>
+
                       <p className="text-muted-foreground leading-relaxed">
-                        Beyond writing code, I focus on understanding how systems work, designing maintainable solutions, and developing a mindset for long-term growth. 
-                        I strive to balance learning new technologies with applying them in practical ways.
+                        My approach goes beyond just writing code; I focus on the architecture 
+                        underneath. Whether it's designing secure APIs or crafting high-performance 
+                        interfaces, I prioritize maintainable systems that meet actual business 
+                        requirements and modern standards.
                       </p>
+
                       <p className="text-muted-foreground leading-relaxed">
-                        I approach challenges with curiosity, dedication, and persistence, always looking for opportunities to grow and contribute meaningfully to projects.
+                        I specialize in managing the entire development lifecycle, combining 
+                        robust backend logic with clean execution. I&apos;m driven by solving 
+                        complex technical challenges and contributing to environments that 
+                        value high-quality engineering.
                       </p>
                     </div>
                   </div>
@@ -169,11 +178,17 @@ const AboutMeSection: React.FC = () => {
               {/* Right: Content */}
               <div className="flex-1 text-center md:text-left mt-16">
                 <p className='my-4'>
-                  I&apos;m currently 4th year student at Baliuag Polytechnic College with a degree of Bachelor of Science in Information Technology.
+                  Since 2023, I have focused on architecting secure backend systems and 
+                  high-performance interfaces. My experience includes freelance work and 
+                  industry roles where I transitioned from an intern into a part-time 
+                  developer, managing the full development lifecycle of real-world projects.
                 </p>
-                <p>I started programming last february 2023. I first study HTML, CSS and JavaScript. I also have some experience with Python and Java.</p>
+
                 <p className='my-4'>
-                  Througout the years, I have worked on various projects ranging from simple websites to complex web applications.
+                  I prioritize writing clean, maintainable code and building software that 
+                  meets modern production standards. I hold a degree in Information 
+                  Technology, bridging the gap between academic theory and practical, 
+                  scalable engineering.
                 </p>
               </div>
             </div>

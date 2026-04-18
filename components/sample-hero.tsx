@@ -81,12 +81,14 @@ const HeroSection: React.FC = () => {
           </div>
           
           <h1 className="text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-            Aspiring Full-Stack Developer
+            Full-Stack Developer
           </h1>
           
           <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
-            I design and implement scalable backend systems, create clean and secure APIs, and deploy production-ready applications.  
-I also handle frontend development, ensuring end-to-end solutions that meet modern standards.
+            I build production-ready web applications, specializing in secure 
+  API architecture and scalable backend systems. I develop the 
+  complete stack to ensure every project is performant, 
+  well-structured, and meets modern standards.
           </p>
           
           <div className="flex flex-wrap gap-4 pt-4">
@@ -120,7 +122,7 @@ I also handle frontend development, ensuring end-to-end solutions that meet mode
             </div>
             <div>
               <div className="text-3xl font-bold text-primary">2+</div>
-              <div className="text-sm text-muted-foreground">Years Learning Web Dev</div>
+              <div className="text-sm text-muted-foreground">Full-Stack Development</div>
             </div>
           </div>
         </div>
